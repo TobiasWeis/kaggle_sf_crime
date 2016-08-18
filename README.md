@@ -19,5 +19,9 @@ Two options:
 1) save to rds file w/ gray values: use python script to reload rds and plot [1], mapdata = np.loadtxt("outputmap.txt")
 2) the colored image mapfile is created by ggmap (ggmapTemp.png), can be loaded and in matplotlib set extent to lat_lon_box 
 
+Example using the second option:
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+
 [0] https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf
+
 [1] https://www.kaggle.com/benhamner/sf-crime/saving-the-python-maps-file

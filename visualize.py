@@ -47,7 +47,10 @@ plt.imshow(mapdata,
 
 # Choose a specific category to plot incidents
 cat = 'DRUNKENNESS'
-plt.plot(df[df.Category == cat].X, df[df.Category == cat].Y, 'b.', alpha=0.3)
+cat2 = 'VEHICLE THEFT'
+plt.plot(df[df.Category == cat2].X, df[df.Category == cat2].Y, 'r.', ms=10, alpha=0.5, label=cat2)
+plt.plot(df[df.Category == cat].X, df[df.Category == cat].Y, 'b.', ms=10, alpha=0.5, label=cat)
+plt.legend()
 
 '''
 plt.imshow(zv, origin='lower', 
