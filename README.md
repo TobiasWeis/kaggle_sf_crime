@@ -6,6 +6,9 @@ The first trains single classifiers and evaluates them using logloss (also used 
 
 To get a feel for the data, visualization.py plots some statistics about the dataset.
 
+The first try:
+- Random Forest Classifier (clf = RandomForestClassifier(max_depth=16, n_estimators=1024, n_jobs=48)) placed 580/2335 with a logloss of 2.41519 (number one entry: 1.95936)
+
 ## Data
 I did not want to checkin the raw data (too big), but I also hate searching data in the future,
 so I zipped the kaggle data. Just unzip data/kaggle_data.zip, and you have everything you need

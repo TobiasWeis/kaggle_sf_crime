@@ -6,6 +6,7 @@ from utils.playsound_tobi import *
 from utils.loader import *
 import sys
 import time
+from operator import itemgetter
 
 ####################
 # load and preprocess data
@@ -30,7 +31,7 @@ Y = [1,2,3]
 # with too small train/test sizes, sometimes a lable is not present in either group
 while len(np.unique(Y_test)) != len(np.unique(Y)):
     print "Splitting dataset"
-    train, test, Y, Y_test = train_test_split(df_x_shuf, df_y_shuf, train_size=0.8)
+    train, test, Y, Y_test = train_test_split(df_x_shuf, df_y_shuf, train_size=0.4)
 len(train)
 len(np.unique(Y))
 
@@ -42,7 +43,7 @@ from sklearn.metrics import log_loss
 
 print "Training Random Forest w/ random search"
 #st = time.time()
-clf = RandomForestClassifier(max_depth=16, n_estimators=1024)
+clf = RandomForestClassifier(n_jobs=40)
 #clf.fit(train, Y)
 #print "Took: ", time.time() - st
 
@@ -63,33 +64,21 @@ def report(grid_scores, n_top=3):
 
 # specify parameters and distributions to sample from
 param_dist = {"max_depth": [3, None],
+              "n_estimators": [48, 128, 256, 512, 1024, 2048],
               "max_features": sp_randint(1, len(features)),
-              "min_samples_split": sp_randint(1, 11),
-              "min_samples_leaf": sp_randint(1, 11),
-              "bootstrap": [True, False],
+              "min_samples_split": sp_randint(1, len(features)),
+              "min_samples_leaf": sp_randint(1, len(features)),
+              #"bootstrap": [True, False],
               "criterion": ["gini", "entropy"]}
 
 # run randomized search
-n_iter_search = 20
-random_search = RandomizedSearchCV(clf, param_distributions=param_dist,
-                                   n_iter=n_iter_search, n_jobs=60)
+n_iter_search = 10
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist, n_iter=n_iter_search)
 
 start = time.time()
 random_search.fit(train, Y)
 print("RandomizedSearchCV took %.2f seconds for %d candidates"
       " parameter settings." % ((time.time() - start), n_iter_search))
 report(random_search.grid_scores_)
-
-
-n_tests = len(Y_test)
-print "Predicting %d samples" % (n_tests)
-st = time.time()
-preds = clf.predict_proba(test[:n_tests])
-print log_loss(Y_test[:n_tests].astype('int'), preds)
-print "Took: ", time.time() - st
-
-# disabled, does not work on server
-# play a sound when done!
-#Playsound('./utils/complete.wav')
 
 print "Done."

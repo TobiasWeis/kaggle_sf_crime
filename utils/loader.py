@@ -8,9 +8,10 @@ class Loader():
         #####################
         self.df = pd.read_csv(csvfile, parse_dates=['Dates'])
 
-    def process(self, use_dummies=False):
+    def process(self, use_dummies=False, do_filter=False):
         # remove X outliers (everything thats outside 3 standard deviations)
-        self.df = self.df[np.abs(self.df.X-self.df.X.mean())<=(3*self.df.X.std())]
+        if do_filter:
+            self.df = self.df[np.abs(self.df.X-self.df.X.mean())<=(3*self.df.X.std())]
 
         self.features = ["X", "Y"]
 
