@@ -17,7 +17,7 @@ so I zipped the kaggle data. Just unzip data/kaggle_data.zip, and you have every
 Some plots using pandas and seaborn
 ![Global stats](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/plot_global.png)
 
-![Number of Crimes per Hour of Day for each Category](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/plot_hour_category)
+![Number of Crimes per Hour of Day for each Category](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/plot_hour_category.png)
 
 ## Map for visualization
 map-creation: script in utils (get_map_and_save.r): [0]
