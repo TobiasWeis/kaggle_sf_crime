@@ -13,6 +13,12 @@ The first try:
 I did not want to checkin the raw data (too big), but I also hate searching data in the future,
 so I zipped the kaggle data. Just unzip data/kaggle_data.zip, and you have everything you need
 
+## Plots
+Some plots using pandas and seaborn
+![Global stats](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/plot_global.png)
+
+![Number of Crimes per Hour of Day for each Category](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/plot_hour_category)
+
 ## Map for visualization
 map-creation: script in utils (get_map_and_save.r): [0]
 use ggmap package of R, specify lat/lon box,
@@ -23,7 +29,7 @@ Two options:
 2) the colored image mapfile is created by ggmap (ggmapTemp.png), can be loaded and in matplotlib set extent to lat_lon_box 
 
 Example using the second option:
-![Plotted map](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/map_plot.png)
+![Map plot for a specific category with Kernel Density as Heatmap](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/map_arson.png)
 
 [0] https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf
 
