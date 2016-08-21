@@ -13,8 +13,11 @@ df["Month"] = df.Dates.dt.month
 df["Year"] = df.Dates.dt.year
 
 # overall stats
-df["Category"].value_counts().plot(kind="bar", title="Number of crimes per category")
-df["PdDistrict"].value_counts().plot(kind="bar", title="Number of crimes per PD District")
+fig = plt.figure()
+fig.add_subplot(121)
+df["Category"].value_counts(ascending=True).plot(kind="barh", title="Number of crimes per category")
+fig.add_subplot(122)
+df["PdDistrict"].value_counts(ascending=True).plot(kind="barh", title="Number of crimes per PD District")
 
 # draw plots showing the number of crimes per category for each instance of this attribute
 def plotNumCrimesPerCat(attribute):
