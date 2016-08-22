@@ -11,6 +11,9 @@ class Loader():
     def process(self, use_dummies=False, do_filter=False):
         # remove X outliers (everything thats outside 3 standard deviations)
         if do_filter:
+	    #Finally, the geographical coordinates. Some values are clearly wrong. Indeed, we have 67 entries in train and 76 in test where the latitude is given as 90 degrees, i.e. the north pole. As those mistakes are mercifully few, we just replace these values by the medians for the corresponding police district.
+
+
 	    print "Before outlier removal: ", len(self.df)
 	    self.df_outliers = self.df[np.abs(self.df.X-self.df.X.mean()) >= (3*self.df.X.std())]
 	    print "Got %d outliers of coordinates, removed." % len(self.df_outliers)
@@ -75,6 +78,11 @@ class Loader():
             self.df["Y_bin"] = pd.cut(self.df.Y, bins, labels=labels, include_lowest=True)
             self.features.append("Y_bin")
             '''
+
+	    # detect street corner or not
+	    # (https://github.com/MichaelPluemacher/San-Francisco-crimes/blob/master/AnalyzeAndClean.py)
+	    self.df['StreetCorner'] = self.df['Address'].apply(lambda x: 1 if '/' in x else 0)
+	    self.features.append("StreetCorner")
 
             return self.df, self.features
 
