@@ -50,9 +50,9 @@ class Loader():
 	    self.df = self.df.replace({'DayOfWeek' : mapping})
 
             #self.df['DayOfWeek_num'] = self.df['DayOfWeek'].astype('category').cat.codes.astype('float')
-            self.features.append("DayOfWeek_num")
+            #self.features.append("DayOfWeek_num")
 
-            self.df['PdDistrict_num'] = self.df['PdDistrict'].astype('category').cat.codes.astype('float')
+            self.df['PdDistrict_num'] = self.df['PdDistrict'].astype('category').cat.codes.astype('int')
             self.features.append("PdDistrict_num")
             
             self.df['Hour'] = self.df.Dates.dt.hour
@@ -64,12 +64,15 @@ class Loader():
             self.df['Year'] = self.df.Dates.dt.year
             self.features.append("Year")
 
+            self.df['DayOfYear'] = self.df.Dates.dt.dayofyear
+            self.features.append('DayOfYear')
+
             # discretize the coordinates
+            # did not improve here
+            '''
             minval = self.df.X.min()
             maxval = self.df.X.max()
 
-            # did not improve here
-            '''
             bins = 500
             labels = np.arange(0.,bins)
             self.df["X_bin"] = pd.cut(self.df.X, bins, labels=labels, include_lowest=True)

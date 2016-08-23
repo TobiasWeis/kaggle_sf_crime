@@ -31,7 +31,7 @@ Y = [1,2,3]
 # with too small train/test sizes, sometimes a lable is not present in either group
 while len(np.unique(Y_test)) != len(np.unique(Y)):
     print "Splitting dataset"
-    train, test, Y, Y_test = train_test_split(df_x_shuf, df_y_shuf, train_size=0.95)
+    train, test, Y, Y_test = train_test_split(df_x_shuf, df_y_shuf, train_size=0.3, random_state=1337)
 len(train)
 len(np.unique(Y))
 
@@ -68,8 +68,8 @@ def report(grid_scores, n_top=3):
 
 
 # specify parameters and distributions to sample from
-param_dist = {"max_depth": [8,12,16,20, 32,64],
-              "n_estimators": [256, 512, 1024, 2048],
+param_dist = {"max_depth": [8,12,16,20,32,64],
+              "n_estimators": [128,256, 512, 1024, 2048,4096],
               "max_features": sp_randint(1, len(features)),
               "min_samples_split": sp_randint(1, len(features)),
               "min_samples_leaf": sp_randint(1, len(features)),
@@ -77,11 +77,11 @@ param_dist = {"max_depth": [8,12,16,20, 32,64],
               "criterion": ["gini", "entropy"]}
 
 # run randomized search
-n_iter_search = 20 
+n_iter_search = 40 
 random_search = RandomizedSearchCV(clf, param_distributions=param_dist, n_iter=n_iter_search, scoring=scorer)
 
 start = time.time()
-random_search.fit(df_x_shuf, df_y_shuf)
+random_search.fit(train, Y)
 print("RandomizedSearchCV took %.2f seconds for %d candidates"
       " parameter settings." % ((time.time() - start), n_iter_search))
 report(random_search.grid_scores_)
