@@ -47,35 +47,51 @@ else:
     train = df_x_shuf
     Y = df_y_shuf
     test = df_x_test
-    
 
 ####################
-# train a classifier
+# Classification
 ####################
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import log_loss
+# T = tree
+# F = forest
+classifier = 'T'
 
-print "Training Random Forest"
 st = time.time()
-# this one perfomred really good (manually set)
-clf = RandomForestClassifier(max_depth=16, n_estimators=1024, n_jobs=48)
-# this one i got from the randomized search
-#clf = RandomForestClassifier(max_features=2, min_samples_split=3, criterion="entropy", min_samples_leaf=3, n_estimators=1024, n_jobs=64, max_depth=None)
-clf.fit(train, Y)
+if classifier == 'T': 
+    from sklearn import tree
+    clf = tree.DecisionTreeClassifier()
+    clf.fit(train, Y)
+    print "Training Decision Tree"
+
+if classifier == 'F':
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.metrics import log_loss
+
+    print "Training Random Forest"
+    # this one perfomred really good (manually set)
+    clf = RandomForestClassifier(max_depth=16, n_estimators=1024, n_jobs=48)
+    # this one i got from the randomized search
+    #clf = RandomForestClassifier(max_features=2, min_samples_split=3, criterion="entropy", min_samples_leaf=3, n_estimators=1024, n_jobs=64, max_depth=None)
+    clf.fit(train, Y)
 print "Took: ", time.time() - st
 
+####################
+# Prediction
+####################
 print "Predicting %d samples" % (len(test))
 st = time.time()
 preds = clf.predict_proba(test)
 print "Took: ", time.time() - st
 
+
+#####################
+# Output
+#####################
 if not _submission:
     print log_loss(Y_test[:n_tests].astype('int'), preds)
 else:
     #Write results
     result=pd.DataFrame(preds, columns=clf.classes_)
     result.to_csv('testResult.csv', index = True, index_label = 'Id' )
-
 
 # disabled, does not work on server
 # play a sound when done!
