@@ -58,6 +58,27 @@ class Loader():
             self.df['Hour'] = self.df.Dates.dt.hour
             self.features.append("Hour")
 
+            self.df['Month'] = self.df.Dates.dt.month
+            self.features.append("Month")
+
+            self.df['Year'] = self.df.Dates.dt.year
+            self.features.append("Year")
+
+            # discretize the coordinates
+            minval = self.df.X.min()
+            maxval = self.df.X.max()
+
+            # did not improve here
+            '''
+            bins = 500
+            labels = np.arange(0.,bins)
+            self.df["X_bin"] = pd.cut(self.df.X, bins, labels=labels, include_lowest=True)
+            self.features.append("X_bin")
+
+            self.df["Y_bin"] = pd.cut(self.df.Y, bins, labels=labels, include_lowest=True)
+            self.features.append("Y_bin")
+            '''
+
 	    # detect street corner or not
 	    # (https://github.com/MichaelPluemacher/San-Francisco-crimes/blob/master/AnalyzeAndClean.py)
 	    self.df['StreetCorner'] = self.df['Address'].apply(lambda x: 1 if '/' in x else 0)
