@@ -31,7 +31,7 @@ df_x_test = np.array(df_test[features]).astype('float32')
 from sklearn.utils import shuffle
 df_x_shuf, df_y_shuf = shuffle(df_x, df_y, random_state=0)
 
-_submission = False
+_submission = True
 
 if not _submission:
     Y_test = []
@@ -60,12 +60,12 @@ classifier = 'T'
 if classifier == 'T':
     print "Training Decision Tree"
     from sklearn import tree
-    clf = tree.DecisionTreeClassifier()
+    # parameters obtained by random search
+    clf = tree.DecisionTreeClassifier(max_depth=8, min_samples_leaf=1)
     clf.fit(train, Y)
-else if classifier == 'F':
+elif classifier == 'F':
     print "Training Random Forest"
     from sklearn.ensemble import RandomForestClassifier
-    from sklearn.metrics import log_loss
 
     # this one perfomred really good (manually set)
     '''
@@ -87,7 +87,7 @@ else if classifier == 'F':
             bootstrap=False,
             #min_samples_leaf=4,
             n_jobs=60, random_state=1337)
-else if classifier == 'X':
+elif classifier == 'X':
     print "Training xgboost"
     import xgboost as xgb
     clf = xgb.XGBClassifier(max_depth=20, n_estimators=512, learning_rate=0.05)
@@ -103,6 +103,7 @@ preds = clf.predict_proba(test)
 print "Took: ", time.time() - st
 
 if not _submission:
+    from sklearn.metrics import log_loss
     ll = log_loss(Y_test, preds)
     print "LogLoss: %f" % ll
     # write result to file for later comparison
@@ -112,9 +113,9 @@ if not _submission:
     fname = ""
     if classifier == 'T':
         fname = "log_tree.txt"
-    else if classifier == 'F':
+    elif classifier == 'F':
         fname = "log_forest.txt"
-    else if classifier == 'X':
+    elif classifier == 'X':
         fname = "log_xgboost"
 
     f = open(fname, "a+")

@@ -31,7 +31,7 @@ Y = [1,2,3]
 # with too small train/test sizes, sometimes a lable is not present in either group
 while len(np.unique(Y_test)) != len(np.unique(Y)):
     print "Splitting dataset"
-    train, test, Y, Y_test = train_test_split(df_x_shuf, df_y_shuf, train_size=0.3, random_state=1337)
+    train, test, Y, Y_test = train_test_split(df_x_shuf, df_y_shuf, train_size=0.7)
 len(train)
 len(np.unique(Y))
 
@@ -41,11 +41,26 @@ len(np.unique(Y))
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import log_loss
 
-print "Training Random Forest w/ random search"
-#st = time.time()
-clf = RandomForestClassifier(n_jobs=50)
-#clf.fit(train, Y)
-#print "Took: ", time.time() - st
+classifier = 'T'
+
+if classifier == 'T':
+    from sklearn import tree
+    clf = tree.DecisionTreeClassifier()
+    param_dist = {"max_depth": [3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+                  "min_samples_leaf" : [1,2,3,4,5],
+                  "class_weight": ["balanced", None]
+                  }
+elif classifier == 'F':
+    print "Training Random Forest w/ random search"
+    clf = RandomForestClassifier(n_jobs=50)
+    # specify parameters and distributions to sample from
+    param_dist = {"max_depth": [8,12,16,20,32,64],
+                  "n_estimators": [128,256, 512, 1024, 2048,4096],
+                  "max_features": sp_randint(1, len(features)),
+                  "min_samples_split": sp_randint(1, len(features)),
+                  "min_samples_leaf": sp_randint(1, len(features)),
+                  "bootstrap": [True, False],
+                  "criterion": ["gini", "entropy"]}
 
 from scipy.stats import randint as sp_randint
 from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
@@ -67,18 +82,9 @@ def report(grid_scores, n_top=3):
         print("")
 
 
-# specify parameters and distributions to sample from
-param_dist = {"max_depth": [8,12,16,20,32,64],
-              "n_estimators": [128,256, 512, 1024, 2048,4096],
-              "max_features": sp_randint(1, len(features)),
-              "min_samples_split": sp_randint(1, len(features)),
-              "min_samples_leaf": sp_randint(1, len(features)),
-              "bootstrap": [True, False],
-              "criterion": ["gini", "entropy"]}
-
 # run randomized search
-n_iter_search = 40 
-random_search = RandomizedSearchCV(clf, param_distributions=param_dist, n_iter=n_iter_search, scoring=scorer)
+n_iter_search = 130
+random_search = RandomizedSearchCV(clf, param_distributions=param_dist, n_iter=n_iter_search, scoring=scorer, pre_dispatch=20)
 
 start = time.time()
 random_search.fit(train, Y)
