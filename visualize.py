@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/cbin/python
 
 import matplotlib.pyplot as plt
 from utils.loader import *
@@ -29,11 +29,40 @@ def plotNumCrimesPerCat(attribute):
     plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
     plt.title("Number of Crimes per Category for attribute %s" % attribute)
 
+def plotNumCrimes(attribute, normalized_per_attribute=False, normalized_per_crime=False):
+    plt.suptitle("Number of Crimes per Category for attribute %s" % attribute)
+    by_param = df.groupby([attribute, 'Category'])
+    table = by_param.size()
+    d2table = table.unstack()
+    if normalized_per_attribute:
+        plt.title("Normalized by number of crimes per attribute")
+        normedtable = d2table.div(d2table.sum(1), axis=0)
+        normedtable.plot(figsize=(20,10), color=sns.color_palette('Set2', len(np.unique(df.Category))))
+    elif normalized_per_crime:
+        plt.title("Normalized by total number of crimes")
+        normedtable = d2table.div(d2table.sum(1).sum(0))
+        normedtable.plot(figsize=(20,10), color=sns.color_palette('Set2', len(np.unique(df.Category))))
+    else:
+        plt.title("Number of crimes per attribute")
+        d2table.plot(figsize=(20,10), color=sns.color_palette('Set2', len(np.unique(df.Category))))
+        
+    plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
+    
+
+
+plotNumCrimes("DayOfWeek")
+plotNumCrimes("DayOfWeek", normalized_per_attribute=True)
+plotNumCrimes("DayOfWeek", normalized_per_crime=True)
+'''
 plotNumCrimesPerCat("Year")
 plotNumCrimesPerCat("Month")
 plotNumCrimesPerCat("DayOfWeek")
 plotNumCrimesPerCat("Hour")
 plotNumCrimesPerCat("PdDistrict")
+'''
+plt.show()
+
+sys.exit(0)
 
 #########################################
 # Geospatial part
