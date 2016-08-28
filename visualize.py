@@ -1,4 +1,4 @@
-#!/usr/cbin/python
+#!/usr/bin/python
 
 import matplotlib.pyplot as plt
 from utils.loader import *
