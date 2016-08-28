@@ -31,7 +31,7 @@ Two options:
 2) the colored image mapfile is created by ggmap (ggmapTemp.png), can be loaded and in matplotlib set extent to lat_lon_box 
 
 Example using the second option:
-![Map plot for a specific category with Kernel Density as Heatmap](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/map_arson.png)
+![Map plot for a specific category with Kernel Density as Heatmap](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/map_plot.png)
 
 [0] https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf
 
