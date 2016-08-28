@@ -54,6 +54,7 @@ else:
 ####################
 # T = Tree
 # F = Forest
+# X = xgboost
 
 classifier = 'T'
 
