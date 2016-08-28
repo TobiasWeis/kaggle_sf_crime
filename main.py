@@ -54,6 +54,7 @@ else:
 ####################
 # T = Tree
 # F = Forest
+# X = xgboost
 # A = adaboost
 
 for classifier in ['A','T','F']:

@@ -29,11 +29,17 @@ def plotNumCrimesPerCat(attribute):
     plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
     plt.title("Number of Crimes per Category for attribute %s" % attribute)
 
-def plotNumCrimes(attribute, normalized_per_attribute=False, normalized_per_crime=False):
-    plt.suptitle("Number of Crimes per Category for attribute %s" % attribute)
-    by_param = df.groupby([attribute, 'Category'])
+def plotNumCrimes(ax, attribute, normalized_per_attribute=False, normalized_per_crime=False, catlist=None):
+    #plt.suptitle("Number of Crimes per Category for attribute %s" % attribute)
+    by_param = None
+    if catlist:
+        by_param = df[df.Category.isin(catlist)].groupby([attribute, 'Category'])
+    else:
+        by_param = df.groupby([attribute, 'Category'])
     table = by_param.size()
+
     d2table = table.unstack()
+
     if normalized_per_attribute:
         plt.title("Normalized by number of crimes per attribute")
         normedtable = d2table.div(d2table.sum(1), axis=0)
@@ -43,16 +49,21 @@ def plotNumCrimes(attribute, normalized_per_attribute=False, normalized_per_crim
         normedtable = d2table.div(d2table.sum(1).sum(0))
         normedtable.plot(figsize=(20,10), color=sns.color_palette('Set2', len(np.unique(df.Category))))
     else:
-        plt.title("Number of crimes per attribute")
-        d2table.plot(figsize=(20,10), color=sns.color_palette('Set2', len(np.unique(df.Category))))
+        #plt.title("Number of crimes per attribute")
+        d2table.plot(ax=ax, figsize=(20,10), color=sns.color_palette('Set2', len(np.unique(df.Category))))
         
     plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
     
-
-
-plotNumCrimes("DayOfWeek")
-plotNumCrimes("DayOfWeek", normalized_per_attribute=True)
-plotNumCrimes("DayOfWeek", normalized_per_crime=True)
+import math
+fig = plt.figure()
+features = ["DayOfWeek", "PdDistrict_num", "Hour", "Year","Month","DayOfYear","StreetCorner" ]
+for i,feat in enumerate(features):
+    nrows = 4
+    ncols = 2
+    ax = fig.add_subplot(nrows, ncols, i+1)
+    plotNumCrimes(ax, feat, catlist=["LARCENY/THEFT", "OTHER OFFENSES", "NON-CRIMINAL", "ASSAULT", "DRUG/NARCOTIC"])
+#plotNumCrimes("DayOfWeek", normalized_per_attribute=True)
+#plotNumCrimes("DayOfWeek", normalized_per_crime=True)
 '''
 plotNumCrimesPerCat("Year")
 plotNumCrimesPerCat("Month")
