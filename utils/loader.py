@@ -63,6 +63,9 @@ class Loader():
             self.df['Month'] = self.df.Dates.dt.month
             self.features.append("Month")
 
+            self.df['Day'] = self.df.Dates.dt.day
+            self.features.append("Day")
+
             self.df['Year'] = self.df.Dates.dt.year
             self.features.append("Year")
 
@@ -86,8 +89,8 @@ class Loader():
 
 	    # detect street corner or not
 	    # (https://github.com/MichaelPluemacher/San-Francisco-crimes/blob/master/AnalyzeAndClean.py)
-	    #self.df['StreetCorner'] = self.df['Address'].apply(lambda x: 1 if '/' in x else 0)
-	    #self.features.append("StreetCorner")
+	    self.df['StreetCorner'] = self.df['Address'].apply(lambda x: 1 if '/' in x else 0)
+	    self.features.append("StreetCorner")
 
             return self.df, self.features
 
