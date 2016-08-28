@@ -19,6 +19,8 @@ Some plots using pandas and seaborn
 
 ![Number of Crimes per Hour of Day for each Category](https://github.com/TobiasWeis/kaggle_sf_crime/raw/master/data/plot_hour_category.png)
 
+![Number of Crimes per Attribute for the Top 5 categories](data/plot_top5_cats_or_attributes.png)
+
 ## Map for visualization
 map-creation: script in utils (get_map_and_save.r): [0]
 use ggmap package of R, specify lat/lon box,
