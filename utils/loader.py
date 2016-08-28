@@ -19,6 +19,7 @@ class Loader():
 	    print "Got %d outliers of coordinates, removed." % len(self.df_outliers)
             self.df = self.df[np.abs(self.df.X-self.df.X.mean())<=(3*self.df.X.std())]
 
+        #self.features = []
         self.features = ["X", "Y"]
 
         if use_dummies:
@@ -48,18 +49,22 @@ class Loader():
 	    # define a mapping to get some order in our plots
 	    mapping = {"Monday":1, "Tuesday":2, "Wednesday":3, "Thursday":4, "Friday":5, "Saturday":6, "Sunday":7}
 	    self.df = self.df.replace({'DayOfWeek' : mapping})
+            self.features.append("DayOfWeek")
 
             #self.df['DayOfWeek_num'] = self.df['DayOfWeek'].astype('category').cat.codes.astype('float')
             #self.features.append("DayOfWeek_num")
 
             self.df['PdDistrict_num'] = self.df['PdDistrict'].astype('category').cat.codes.astype('int')
             self.features.append("PdDistrict_num")
-            
+
             self.df['Hour'] = self.df.Dates.dt.hour
             self.features.append("Hour")
 
             self.df['Month'] = self.df.Dates.dt.month
             self.features.append("Month")
+
+            self.df['Day'] = self.df.Dates.dt.day
+            self.features.append("Day")
 
             self.df['Year'] = self.df.Dates.dt.year
             self.features.append("Year")
