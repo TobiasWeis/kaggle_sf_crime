@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import matplotlib.pyplot as plt
+import matplotlib
 from utils.loader import *
 from utils.playsound_tobi import *
 import seaborn as sns
@@ -55,13 +56,14 @@ def plotNumCrimes(ax, attribute, normalized_per_attribute=False, normalized_per_
     plt.legend(bbox_to_anchor=(1.02, 1), loc=2, borderaxespad=0.)
     
 import math
+top_cats = ["LARCENY/THEFT", "OTHER OFFENSES", "NON-CRIMINAL", "ASSAULT", "DRUG/NARCOTIC"]
 fig = plt.figure()
 features = ["DayOfWeek", "PdDistrict_num", "Hour", "Year","Month","DayOfYear","StreetCorner" ]
 for i,feat in enumerate(features):
     nrows = 4
     ncols = 2
     ax = fig.add_subplot(nrows, ncols, i+1)
-    plotNumCrimes(ax, feat, catlist=["LARCENY/THEFT", "OTHER OFFENSES", "NON-CRIMINAL", "ASSAULT", "DRUG/NARCOTIC"])
+    plotNumCrimes(ax, feat, catlist=top_cats)
 #plotNumCrimes("DayOfWeek", normalized_per_attribute=True)
 #plotNumCrimes("DayOfWeek", normalized_per_crime=True)
 '''
@@ -71,9 +73,7 @@ plotNumCrimesPerCat("DayOfWeek")
 plotNumCrimesPerCat("Hour")
 plotNumCrimesPerCat("PdDistrict")
 '''
-plt.show()
 
-sys.exit(0)
 
 #########################################
 # Geospatial part
@@ -104,12 +104,11 @@ def plot_map(cat):
     import cv2
     mapdata = cv2.cvtColor(cv2.imread("./data/outputmap.png"), cv2.COLOR_BGR2RGB)
     aspect = mapdata.shape[0] * 1.0 / mapdata.shape[1]
-    fig = plt.figure(figsize=(20,10))
     plt.imshow(mapdata, 
                cmap=plt.get_cmap('gray'), 
                extent=lon_lat_box, 
                aspect=aspect,
-               alpha=.4)
+               alpha=.8)
     
     # Those are all categories present in the dataset
     '''
@@ -127,7 +126,7 @@ def plot_map(cat):
     '''
     
     # Choose a specific category to plot incidents
-    plt.plot(sub.X, sub.Y, 'y.', ms=10, alpha=0.5, label=cat)
+    plt.plot(sub.X, sub.Y, 'y.', ms=2, alpha=0.01, label=cat)
     plt.title("Category: %s" % cat)
     plt.legend()
     
@@ -136,11 +135,16 @@ def plot_map(cat):
                #cmap=alpha_cm, 
                cmap="hot",
                extent=lon_lat_box, 
-               aspect=aspect, alpha=0.5, interpolation='nearest')
+               aspect=aspect, alpha=0.7, interpolation='nearest')
     
-    plt.show()
     
-plot_map("ARSON")
-plot_map("PROSTITUTION")
-plot_map("VEHICLE THEFT")
-plot_map("GAMBLING")
+fig = plt.figure()
+new_style = {'grid': False}
+matplotlib.rc('axes', **new_style)
+for i,cat in enumerate(np.unique(df.Category)):
+    ncols = 6 
+    nrows = 7 
+    fig.add_subplot(ncols, nrows, i+1)
+    plot_map(cat)
+
+plt.show()
